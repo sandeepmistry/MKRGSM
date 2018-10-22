@@ -79,6 +79,7 @@ int GSMClient::ready()
       MODEM.setResponseDataStorage(&_response);
       MODEM.send("AT+USOCR=6");
 
+      _socket = -1;
       _state = CLIENT_STATE_WAIT_CREATE_SOCKET_RESPONSE;
       ready = 0;
       break;
@@ -230,6 +231,10 @@ int GSMClient::connect()
 {
   if (_socket != -1) {
     stop();
+  }
+
+  if (_socket == -1 && _state != CLIENT_STATE_IDLE) {
+    _state = CLIENT_STATE_IDLE;
   }
 
   if (_synch) {
